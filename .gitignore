@@ -1,0 +1,17 @@
+# Node modules — never push these (200MB of libraries)
+node_modules/
+
+# Environment files — never push secrets to GitHub
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build output
+dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
