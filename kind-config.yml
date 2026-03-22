@@ -1,0 +1,52 @@
+# ============================================================
+# kind-config.yaml
+# Configuration for our local Kubernetes cluster using Kind.
+# This tells Kind exactly how to set up our cluster.
+# ============================================================
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+
+# We want 1 control-plane node and 1 worker node
+nodes:
+
+  # ── Control Plane Node ─────────────────────────────────────
+  # The BRAIN of Kubernetes.
+  # Makes all decisions:
+  #   - which node runs which pod
+  #   - monitors health of pods
+  #   - handles kubectl commands
+  # You never run your app pods here.
+  - role: control-plane
+
+    # Extra config for the control-plane node
+    # We need this to install Nginx Ingress Controller later
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+
+    # Port mappings — forward traffic from your laptop
+    # into the Kind cluster
+    extraPortMappings:
+
+      # HTTP traffic (port 80 in cluster → port 80 on laptop)
+      # This is how browser requests reach our Ingress Controller
+      - containerPort: 80
+        hostPort: 8080
+        protocol: TCP
+
+      # HTTPS traffic (port 443 in cluster → port 443 on laptop)
+      - containerPort: 443
+        hostPort: 8443
+        protocol: TCP
+
+  # ── Worker Node ────────────────────────────────────────────
+  # The MUSCLE of Kubernetes.
+  # This is where your actual app pods run:
+  #   - postgres pod
+  #   - backend pod
+  #   - frontend pod
+  - role: worker

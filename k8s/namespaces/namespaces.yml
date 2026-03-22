@@ -1,0 +1,14 @@
+# ============================================================
+# k8s/namespaces/namespaces.yaml
+# Creates the namespace that ALL our app resources live in.
+# Think of it as creating a project folder inside Kubernetes.
+# Apply this FIRST before any other file.
+# ============================================================
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: taskmanager
+  labels:
+    app: taskmanager
+    environment: production

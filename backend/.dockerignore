@@ -1,0 +1,28 @@
+# ============================================================
+# backend/.dockerignore
+# These files/folders will NOT be copied into the Docker image.
+# Think of this like .gitignore but for Docker builds.
+# ============================================================
+
+# Node dependencies — Docker will run npm ci inside the image instead
+node_modules
+
+# Environment files — NEVER bake secrets into an image
+.env
+.env.*
+
+# Logs — not needed inside the container
+logs
+*.log
+npm-debug.log*
+
+# Development tools — not needed in production image
+.git
+.gitignore
+README.md
+.dockerignore
+Dockerfile
+
+# OS files
+.DS_Store
+Thumbs.db

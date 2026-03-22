@@ -1,0 +1,29 @@
+# ============================================================
+# frontend/.dockerignore
+# Files/folders NOT copied into the Docker image.
+# ============================================================
+
+# Node dependencies — installed fresh inside the image
+node_modules
+
+# Vite build output — rebuilt fresh inside the image via npm run build
+dist
+
+# Environment files — never bake secrets into an image
+.env
+.env.*
+
+# Logs
+*.log
+npm-debug.log*
+
+# Dev and meta files
+.git
+.gitignore
+README.md
+.dockerignore
+Dockerfile
+
+# OS files
+.DS_Store
+Thumbs.db
