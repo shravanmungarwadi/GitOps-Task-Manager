@@ -1,0 +1,47 @@
+# ============================================================
+# values-dev.yml — Override values for DEVELOPMENT environment
+# Used with: helm install taskmanager ./helm -f helm/values-dev.yml
+# Only contains values that DIFFER from the defaults in values.yml
+# Everything not listed here is inherited from values.yml as-is
+# ============================================================
+
+namespace: taskmanager-dev
+
+backend:
+  image:
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 1
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 150m
+      memory: 128Mi
+  env:
+    NODE_ENV: development
+
+frontend:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 25m
+      memory: 32Mi
+    limits:
+      cpu: 50m
+      memory: 64Mi
+
+postgres:
+  storage:
+    size: 512Mi
+
+secrets:
+  jwtSecret: dev-jwt-secret-not-for-production
+  dbPassword: devpassword123
+
+ingress:
+  host: taskmanager.dev.local
+
+hpa:
+  enabled: false

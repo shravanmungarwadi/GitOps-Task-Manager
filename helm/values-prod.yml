@@ -1,0 +1,54 @@
+# ============================================================
+# values-prod.yml — Override values for PRODUCTION environment
+# Used with: helm install taskmanager ./helm -f helm/values-prod.yml
+# Tuned for reliability, security, and performance on AWS EKS
+# ============================================================
+
+namespace: taskmanager-prod
+
+backend:
+  image:
+    tag: v1.0.0
+    pullPolicy: IfNotPresent
+  replicas: 3
+  resources:
+    requests:
+      cpu: 200m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  env:
+    NODE_ENV: production
+
+frontend:
+  replicas: 2
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 150m
+      memory: 128Mi
+
+postgres:
+  storage:
+    size: 10Gi
+    storageClassName: gp2
+
+secrets:
+  jwtSecret: pr0d-$ecReT-k3y-r4nd0m-ch4nG3-th1s-1mM3d14t3Ly
+  dbPassword: Pr0d!P@ssw0rd#2025$Str0nG
+
+ingress:
+  host: taskmanager.shravan.com
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "5m"
+
+hpa:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70

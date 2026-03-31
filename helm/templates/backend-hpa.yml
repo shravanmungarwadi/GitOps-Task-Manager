@@ -1,0 +1,30 @@
+# ============================================================
+# backend-hpa.yml — Auto-scales backend pods based on CPU usage
+# Only created when hpa.enabled is true in values
+# Disabled in dev (unnecessary), enabled in prod (handles traffic)
+# Works with the backend Deployment to adjust replica count
+# ============================================================
+{{- if .Values.hpa.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "taskmanager.fullname" . }}-backend-hpa
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "taskmanager.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "taskmanager.fullname" . }}-backend
+  minReplicas: {{ .Values.hpa.minReplicas }}
+  maxReplicas: {{ .Values.hpa.maxReplicas }}
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: {{ .Values.hpa.targetCPUUtilizationPercentage }}
+{{- end }}

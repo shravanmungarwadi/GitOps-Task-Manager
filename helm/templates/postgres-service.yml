@@ -1,0 +1,23 @@
+# ============================================================
+# postgres-service.yml — Network access to the PostgreSQL pod
+# Gives PostgreSQL a fixed hostname inside the cluster
+# Backend connects to this Service using the DB_HOST value
+# Type ClusterIP ensures database is NOT exposed to the internet
+# ============================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "taskmanager.fullname" . }}-postgres
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "taskmanager.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "taskmanager.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+  ports:
+    - port: {{ .Values.postgres.port }}
+      targetPort: {{ .Values.postgres.port }}
+      protocol: TCP

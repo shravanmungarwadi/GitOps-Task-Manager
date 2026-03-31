@@ -1,0 +1,20 @@
+# ============================================================
+# backend-configmap.yml — Non-sensitive config for the backend
+# Stores environment variables like DB_HOST, NODE_ENV, DB_PORT
+# DB_HOST is generated dynamically to match the postgres Service name
+# Sensitive values (passwords, secrets) go in secrets.yml instead
+# ============================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "taskmanager.fullname" . }}-backend-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "taskmanager.labels" . | nindent 4 }}
+data:
+  NODE_ENV: {{ .Values.backend.env.NODE_ENV | quote }}
+  DB_HOST: {{ printf "%s-postgres" (include "taskmanager.fullname" .) | quote }}
+  DB_PORT: {{ .Values.backend.env.DB_PORT | quote }}
+  DB_NAME: {{ .Values.backend.env.DB_NAME | quote }}
+  DB_USER: {{ .Values.backend.env.DB_USER | quote }}
+  JWT_EXPIRES_IN: {{ .Values.backend.env.JWT_EXPIRES_IN | quote }}

@@ -1,0 +1,73 @@
+# ============================================================
+# values.yml — Central control panel for ALL configurable values
+# Templates read from this file using {{ .Values.keyName }}
+# Override these per-environment using values-dev.yml or values-prod.yml
+# Secrets here are placeholders — replace with a secret manager
+# like AWS Secrets Manager or HashiCorp Vault in production
+# ============================================================
+
+namespace: taskmanager
+
+backend:
+  image:
+    repository: shravanvm/taskmanager-backend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 5000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+  env:
+    NODE_ENV: production
+    DB_PORT: "5432"
+    DB_NAME: taskmanager
+    DB_USER: postgres
+    JWT_EXPIRES_IN: 7d
+
+frontend:
+  image:
+    repository: shravanvm/taskmanager-frontend
+    tag: latest
+    pullPolicy: IfNotPresent
+  replicas: 2
+  port: 80
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+
+postgres:
+  image:
+    repository: postgres
+    tag: "15-alpine"
+    pullPolicy: IfNotPresent
+  replicas: 1
+  port: 5432
+  storage:
+    size: 1Gi
+    storageClassName: standard
+
+secrets:
+  jwtSecret: supersecretjwtkey123changeme
+  dbPassword: postgrespassword123changeme
+
+ingress:
+  enabled: true
+  className: nginx
+  host: taskmanager.local
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+
+hpa:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 5
+  targetCPUUtilizationPercentage: 80

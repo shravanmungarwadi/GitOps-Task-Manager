@@ -1,0 +1,11 @@
+# ============================================================
+# namespace.yml — Creates the Kubernetes namespace for this app
+# All other resources in this chart are deployed into this namespace
+# Namespace name is pulled from values for environment switching
+# ============================================================
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespace }}
+  labels:
+    {{- include "taskmanager.labels" . | nindent 4 }}

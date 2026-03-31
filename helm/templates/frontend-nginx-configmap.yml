@@ -1,0 +1,46 @@
+# ============================================================
+# frontend-nginx-configmap.yml — Nginx config for the frontend
+# Overrides the nginx.conf baked into the Docker image
+# Generates the correct backend Service hostname dynamically
+# Mounted into the frontend container at /etc/nginx/conf.d/
+# ============================================================
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "taskmanager.fullname" . }}-nginx-config
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "taskmanager.labels" . | nindent 4 }}
+data:
+  default.conf: |
+    server {
+        listen 80;
+
+        root /usr/share/nginx/html;
+        index index.html;
+
+        location / {
+            try_files $uri $uri/ /index.html;
+        }
+
+        location /api/ {
+            proxy_pass http://{{ include "taskmanager.fullname" . }}-backend:{{ .Values.backend.port }};
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_cache_bypass $http_upgrade;
+        }
+
+        location /nginx-health {
+            access_log off;
+            return 200 "healthy\n";
+            add_header Content-Type text/plain;
+        }
+
+        gzip on;
+        gzip_types text/plain text/css application/json application/javascript text/xml application/xml;
+        gzip_min_length 1000;
+    }

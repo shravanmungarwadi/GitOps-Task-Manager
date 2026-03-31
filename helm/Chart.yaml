@@ -1,0 +1,36 @@
+# ============================================================
+# Chart.yaml — Identity card of this Helm chart
+# Helm reads this file first before doing anything
+# Defines chart name, version, type, and maintainer info
+# ============================================================
+
+# Chart specification version (v2 = Helm 3, v1 = Helm 2 deprecated)
+apiVersion: v2
+
+# Unique name of this chart (lowercase, hyphens only, no spaces)
+name: gitops-taskmanager
+
+# Short one-line summary of what this chart deploys
+description: A Helm chart for the GitOps Task Manager application
+
+# Chart type (application = deploys real workloads, library = reusable code only)
+type: application
+
+# Version of this CHART (bump when helm/ files change, follows semver)
+version: 0.1.0
+
+# Version of the APPLICATION this chart deploys (must be a string in quotes)
+appVersion: "1.0.0"
+
+# Search tags for this chart (useful if published to a Helm repository)
+keywords:
+  - taskmanager
+  - nodejs
+  - react
+  - postgresql
+  - gitops
+
+# Who maintains this chart (name and contact email)
+maintainers:
+  - name: Shravan
+    email: shravan@example.com

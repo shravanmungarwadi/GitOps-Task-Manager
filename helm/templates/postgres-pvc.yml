@@ -1,0 +1,20 @@
+# ============================================================
+# postgres-pvc.yml — Persistent storage claim for PostgreSQL
+# Ensures database data survives pod restarts and crashes
+# The actual disk (PV) is provisioned automatically by Kubernetes
+# Storage size and class are pulled from values for env switching
+# ============================================================
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "taskmanager.fullname" . }}-postgres-data
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "taskmanager.labels" . | nindent 4 }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.postgres.storage.size }}
+  storageClassName: {{ .Values.postgres.storage.storageClassName }}

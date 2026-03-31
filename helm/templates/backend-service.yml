@@ -1,0 +1,23 @@
+# ============================================================
+# backend-service.yml — Network access to the backend pods
+# Gives the backend API a fixed hostname inside the cluster
+# The Ingress routes /api requests to this Service
+# Type ClusterIP because Ingress handles external access
+# ============================================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "taskmanager.fullname" . }}-backend
+  namespace: {{ .Values.namespace }}
+  labels:
+    {{- include "taskmanager.labels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "taskmanager.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: backend
+  ports:
+    - port: {{ .Values.backend.port }}
+      targetPort: {{ .Values.backend.port }}
+      protocol: TCP
