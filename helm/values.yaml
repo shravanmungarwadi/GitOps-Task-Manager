@@ -11,7 +11,7 @@ namespace: taskmanager
 backend:
   image:
     repository: shravanvm/gitops-taskmanager-backend
-    tag: latest
+    tag: 0ae0daf168303d9e2549652c86396e0bf765f1e6
     pullPolicy: Always
   replicas: 2
   port: 5000
@@ -32,7 +32,7 @@ backend:
 frontend:
   image:
     repository: shravanvm/gitops-taskmanager-frontend
-    tag: latest
+    tag: 0ae0daf168303d9e2549652c86396e0bf765f1e6
     pullPolicy: Always
   replicas: 2
   port: 80
