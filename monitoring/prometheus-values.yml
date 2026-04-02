@@ -1,0 +1,38 @@
+# Helm values for kube-prometheus-stack.
+# Deploys Prometheus, Grafana, Node Exporter, and kube-state-metrics
+# onto a local kind cluster with minimal resource usage.
+# Grafana is exposed on NodePort 32000 for local browser access.
+
+prometheus:
+  prometheusSpec:
+    serviceMonitorSelectorNilUsesHelmValues: false
+    retention: 24h
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+grafana:
+  adminPassword: admin123
+  service:
+    type: NodePort
+    nodePort: 32000
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+alertmanager:
+  enabled: false
+
+nodeExporter:
+  enabled: true
+
+kubeStateMetrics:
+  enabled: true

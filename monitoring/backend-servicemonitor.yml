@@ -1,0 +1,22 @@
+# ServiceMonitor for the backend application.
+# Registers the backend /metrics endpoint with Prometheus Operator
+# so Prometheus automatically scrapes application metrics every 15 seconds.
+
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: backend-servicemonitor
+  namespace: monitoring
+  labels:
+    release: prometheus
+spec:
+  namespaceSelector:
+    matchNames:
+      - taskmanager
+  selector:
+    matchLabels:
+      app: backend
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 15s
