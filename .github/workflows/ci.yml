@@ -131,18 +131,14 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update backend image tag
+      - name: Update image tags in Helm values
         run: |
-          sed -i "s|image: ${{ env.BACKEND_IMAGE }}:.*|image: ${{ env.BACKEND_IMAGE }}:${{ github.sha }}|g" k8s/backend/deployment.yml
-
-      - name: Update frontend image tag
-        run: |
-          sed -i "s|image: ${{ env.FRONTEND_IMAGE }}:.*|image: ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}|g" k8s/frontend/deployment.yml
+          sed -i "s|tag: latest|tag: ${{ github.sha }}|g" helm/values.yaml
 
       - name: Commit and push updated manifests
         run: |
           git config user.email "github-actions@github.com"
           git config user.name "GitHub Actions"
-          git add k8s/backend/deployment.yml k8s/frontend/deployment.yml
+          git add helm/values.yaml
           git diff --staged --quiet || git commit -m "ci: update image tags to ${{ github.sha }}"
           git push
