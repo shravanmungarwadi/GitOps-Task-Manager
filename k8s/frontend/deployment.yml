@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: shravanvm/gitops-taskmanager-frontend:bb46a2943783cd94ee1e109327001697d6528ea3
+          image: shravanvm/gitops-taskmanager-frontend:2591ae8a0de38de14b42a7afd2875109a457ee85
           imagePullPolicy: Always
           ports:
             - containerPort: 80

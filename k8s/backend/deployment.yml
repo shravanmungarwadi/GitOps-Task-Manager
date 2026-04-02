@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: shravanvm/gitops-taskmanager-backend:bb46a2943783cd94ee1e109327001697d6528ea3
+          image: shravanvm/gitops-taskmanager-backend:2591ae8a0de38de14b42a7afd2875109a457ee85
           imagePullPolicy: Always
           ports:
             - containerPort: 5000
