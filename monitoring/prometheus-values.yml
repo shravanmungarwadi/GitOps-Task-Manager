@@ -35,4 +35,4 @@ nodeExporter:
   enabled: true
 
 kubeStateMetrics:
-  enabled: true
+  enabled: true# monitoring stack added
