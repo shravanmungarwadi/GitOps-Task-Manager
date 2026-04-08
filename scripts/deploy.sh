@@ -6,7 +6,7 @@
 # Run from project root: bash scripts/deploy.sh
 # ============================================================
 
-set -e  # Exit immediately if any command fails
+set -e
 
 echo ""
 echo "=================================================="
@@ -29,7 +29,7 @@ echo ""
 
 # ── Step 3: Nginx Ingress Controller ─────────────────────
 echo ">>> Step 3: Installing Nginx Ingress Controller..."
-helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx 2>/dev/null || true
 helm repo update
 helm install ingress-nginx ingress-nginx/ingress-nginx \
   --namespace ingress-nginx \
@@ -48,10 +48,15 @@ echo ""
 # ── Step 4: ArgoCD ────────────────────────────────────────
 echo ">>> Step 4: Installing ArgoCD..."
 kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
-kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
-echo "    Waiting 60 seconds for ArgoCD pods to start..."
-sleep 60
-kubectl wait --for=condition=Ready pods --all -n argocd --timeout=120s
+
+# FIX: use --server-side to avoid 256KB annotation limit
+kubectl apply -n argocd \
+  -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml \
+  --server-side --force-conflicts
+
+echo "    Waiting 90 seconds for ArgoCD pods to start..."
+sleep 90
+kubectl wait --for=condition=Ready pods --all -n argocd --timeout=180s
 echo "✅ ArgoCD installed!"
 echo ""
 
@@ -71,7 +76,7 @@ ARGOCD_PASSWORD=$(kubectl -n argocd get secret argocd-initial-admin-secret \
 echo "✅ ArgoCD password retrieved!"
 echo ""
 
-echo ">>> Connecting ArgoCD to GitHub repo..."
+echo ">>> Connecting ArgoCD to GitHub repo and creating app..."
 kubectl apply -f - <<ARGOAPP
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -97,16 +102,16 @@ spec:
     syncOptions:
       - CreateNamespace=true
 ARGOAPP
-echo "✅ ArgoCD connected to GitHub and syncing app!"
+echo "✅ ArgoCD connected to GitHub — app syncing!"
 echo ""
 
-echo ">>> Waiting 90 seconds for ArgoCD to deploy the app..."
-sleep 90
+echo ">>> Waiting 120 seconds for ArgoCD to deploy the app..."
+sleep 120
 echo ""
 
 # ── Step 5: Prometheus + Grafana ─────────────────────────
 echo ">>> Step 5: Installing Prometheus + Grafana..."
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts 2>/dev/null || true
 helm repo update
 kubectl create namespace monitoring --dry-run=client -o yaml | kubectl apply -f -
 helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
@@ -114,8 +119,8 @@ helm install kube-prometheus-stack prometheus-community/kube-prometheus-stack \
   --values /mnt/d/Projects/gitops-taskmanager/monitoring/prometheus-values.yml \
   --set grafana.service.type=LoadBalancer \
   --set grafana.adminPassword=admin123
-echo "    Waiting 60 seconds for Prometheus + Grafana pods..."
-sleep 60
+echo "    Waiting 90 seconds for Grafana ELB..."
+sleep 90
 echo "✅ Prometheus + Grafana installed!"
 echo ""
 
@@ -124,46 +129,47 @@ kubectl apply -f /mnt/d/Projects/gitops-taskmanager/monitoring/backend-servicemo
 echo "✅ ServiceMonitor applied!"
 echo ""
 
-echo ">>> Waiting 60 seconds for Grafana ELB..."
-sleep 60
+# ── Step 6: Get all URLs ──────────────────────────────────
+echo ">>> Step 6: Getting all URLs..."
+APP_URL=$(kubectl get svc -n ingress-nginx ingress-nginx-controller \
+  --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+ARGOCD_URL=$(kubectl get svc argocd-server -n argocd \
+  --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
 GRAFANA_URL=$(kubectl get svc -n monitoring kube-prometheus-stack-grafana \
   --output jsonpath='{.status.loadBalancer.ingress[0].hostname}')
-echo "✅ Grafana ELB ready!"
 echo ""
 
-# ── Step 6: Verify all pods ───────────────────────────────
-echo ">>> Step 6: Verifying all pods..."
+# ── Step 7: Verify all pods ───────────────────────────────
+echo ">>> Step 7: Verifying all pods..."
 echo ""
-echo "--- App Pods ---"
+echo "--- App Pods (taskmanager) ---"
 kubectl get pods -n taskmanager
 echo ""
 echo "--- ArgoCD Pods ---"
-kubectl get pods -n argocd
+kubectl get pods -n argocd --no-headers | awk '{print $1, $3}'
 echo ""
 echo "--- Monitoring Pods ---"
-kubectl get pods -n monitoring
+kubectl get pods -n monitoring --no-headers | awk '{print $1, $3}'
 echo ""
 
-# ── Step 7: Print all URLs ────────────────────────────────
+# ── Final Output ──────────────────────────────────────────
 echo "=================================================="
-echo "   Deployment Complete!"
+echo "   🎉 Deployment Complete!"
 echo "=================================================="
 echo ""
-echo ">>> YOUR APP URL:"
-echo "    http://$APP_URL"
+echo "   APP URL:     http://$APP_URL"
 echo ""
-echo ">>> ARGOCD URL:"
-echo "    http://$ARGOCD_URL"
-echo "    Username: admin"
-echo "    Password: $ARGOCD_PASSWORD"
+echo "   ARGOCD URL:  http://$ARGOCD_URL"
+echo "   Username:    admin"
+echo "   Password:    $ARGOCD_PASSWORD"
 echo ""
-echo ">>> GRAFANA URL:"
-echo "    http://$GRAFANA_URL"
-echo "    Username: admin"
-echo "    Password: admin123"
+echo "   GRAFANA URL: http://$GRAFANA_URL"
+echo "   Username:    admin"
+echo "   Password:    admin123"
 echo ""
 echo "=================================================="
-echo "   All services are live!"
 echo "   Take screenshots for your portfolio!"
+echo "   Running cost: ~\$0.32/hour"
+echo "   Run bash scripts/destroy.sh when done!"
 echo "=================================================="
 echo ""
