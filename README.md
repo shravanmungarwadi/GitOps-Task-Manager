@@ -207,27 +207,27 @@ graph TD
 
 | Login Page | Empty Dashboard |
 |---|---|
-| ![Login](docs/screenshots/app/01-login-page.png) | ![Dashboard Empty](docs/screenshots/app/02-dashboard-empty.png) |
+| ![Login](docs/screenshots/app/Screenshot_2026-04-08_180328.png) | ![Dashboard Empty](docs/screenshots/app/Screenshot_2026-04-08_180407.png) |
 
 | Dashboard with Task Created | Task Marked as Completed |
 |---|---|
-| ![Dashboard Task](docs/screenshots/app/03-dashboard-with-task.png) | ![Task Completed](docs/screenshots/app/04-task-completed.png) |
+| ![Dashboard Task](docs/screenshots/app/Screenshot_2026-04-08_180509.png) | ![Task Completed](docs/screenshots/app/Screenshot_2026-04-08_180522.png) |
 
 ---
 
 ### ⚙️ ArgoCD — GitOps in Action
 
-| Application Home — Healthy & Synced to GitHub | Resource Tree View — All K8s Resources |
+| Application Home — Healthy & Synced | Resource Tree View |
 |---|---|
-| ![ArgoCD Home](docs/screenshots/argocd/05-argocd-home.png) | ![ArgoCD Tree](docs/screenshots/argocd/01-argocd-tree.png) |
+| ![ArgoCD Home](docs/screenshots/argocd/Screenshot_2026-04-08_180706.png) | ![ArgoCD Tree](docs/screenshots/argocd/Screenshot__815_.png) |
 
 | Network View — ELB → Ingress → Services → Pods | Resource List — 13 Resources Synced |
 |---|---|
-| ![ArgoCD Network](docs/screenshots/argocd/03-argocd-network.png) | ![ArgoCD List](docs/screenshots/argocd/04-argocd-list.png) |
+| ![ArgoCD Network](docs/screenshots/argocd/Screenshot__817_.png) | ![ArgoCD List](docs/screenshots/argocd/Screenshot__818_.png) |
 
 | EKS Worker Nodes | Pods Grouped by Node |
 |---|---|
-| ![ArgoCD Nodes](docs/screenshots/argocd/06-argocd-nodes.png) | ![ArgoCD Pods](docs/screenshots/argocd/02-argocd-pods.png) |
+| ![ArgoCD Nodes](docs/screenshots/argocd/Screenshot_2026-04-08_180742.png) | ![ArgoCD Pods](docs/screenshots/argocd/Screenshot__816_.png) |
 
 ---
 
@@ -243,15 +243,15 @@ graph TD
 
 | All Available Dashboards | Custom GitOps Task Manager Dashboard |
 |---|---|
-| ![Grafana Dashboards](docs/screenshots/grafana/01-grafana-dashboards.png) | ![Custom Dashboard](docs/screenshots/grafana/03-grafana-custom-dashboard.png) |
+| ![Grafana Dashboards](docs/screenshots/grafana/Screenshot__820_.png) | ![Custom Dashboard](docs/screenshots/grafana/Screenshot_2026-04-08_181522.png) |
 
 | Kubernetes API Server — 100% Availability | Multi-Cluster CPU & Memory Utilization |
 |---|---|
-| ![K8s API Server](docs/screenshots/grafana/04-grafana-k8s-api-server.png) | ![K8s Cluster](docs/screenshots/grafana/05-grafana-k8s-cluster.png) |
+| ![K8s API Server](docs/screenshots/grafana/Screenshot_2026-04-08_184058.png) | ![K8s Cluster](docs/screenshots/grafana/Screenshot_2026-04-08_184118.png) |
 
-| Pod Network Bandwidth (505kb/s) | Backend Pod Memory Usage |
+| Pod Network Bandwidth | Backend Pod Memory Usage |
 |---|---|
-| ![K8s Network](docs/screenshots/grafana/06-grafana-k8s-network.png) | ![Custom Memory](docs/screenshots/grafana/07-grafana-custom-memory.png) |
+| ![K8s Network](docs/screenshots/grafana/Screenshot_2026-04-08_184138.png) | ![Custom Memory](docs/screenshots/grafana/Screenshot_2026-04-08_184317.png) |
 
 ---
 
@@ -300,7 +300,7 @@ bash scripts/destroy.sh
 
 Tears everything down in the correct order — no manual steps, no VPC dependency errors.
 
-> 📖 See [docs/how-to-run.md](docs/how-to-run.md) for complete step-by-step explanation of both scripts with line-by-line breakdown.
+> 📖 See [docs/how-to-run.md](docs/how-to-run.md) for complete step-by-step explanation of both scripts.
 
 ---
 
@@ -357,9 +357,9 @@ The GitHub Actions pipeline has **4 jobs** that run on every push to main:
 ```
 
 - **Job 1** — Runs backend test suite
-- **Job 2** — Trivy scans Docker image for CVEs — fails pipeline if critical vulnerabilities found
+- **Job 2** — Trivy scans Docker image for CVEs
 - **Job 3** — Builds multi-stage images, pushes to Docker Hub tagged with Git SHA
-- **Job 4** — Updates `helm/values.yaml` with new SHA tag, commits back to GitHub → ArgoCD picks it up and deploys
+- **Job 4** — Updates `helm/values.yaml` with new SHA tag, commits back → ArgoCD deploys
 
 ---
 
@@ -375,10 +375,10 @@ The Node.js backend exposes custom metrics at `/metrics` using `prom-client`:
 | `active_connections` | Gauge | Current active HTTP connections |
 
 ### Grafana Dashboards
-- **Kubernetes / Compute Resources / Cluster** — EKS CPU, memory, network utilization
+- **Kubernetes / Compute Resources / Cluster** — EKS CPU, memory, network
 - **Kubernetes / API Server** — 100% availability SLO tracking
-- **Kubernetes / Networking / Pod** — Pod network bandwidth (505kb/s receive)
-- **GitOps Task Manager** — Custom app dashboard with HTTP metrics and memory usage
+- **Kubernetes / Networking / Pod** — Pod network bandwidth
+- **GitOps Task Manager** — Custom app dashboard with HTTP metrics
 
 ---
 
@@ -439,7 +439,7 @@ gitops-taskmanager/
 │   ├── phases.md               # All 11 phases + bugs + learnings
 │   ├── how-to-run.md           # deploy.sh + destroy.sh explained
 │   ├── setup-guide.md          # Prerequisites + AWS setup
-│   └── screenshots/            # 19 screenshots across 5 folders
+│   └── screenshots/            # All project screenshots
 ├── .github/workflows/
 │   └── ci.yml                  # 4-job GitHub Actions pipeline
 └── docker-compose.yml          # Local development stack
