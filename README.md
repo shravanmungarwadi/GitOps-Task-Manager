@@ -207,11 +207,11 @@ graph TD
 
 | Login Page | Empty Dashboard |
 |---|---|
-| ![Login](docs/screenshots/app/Screenshot_2026-04-08_180328.png) | ![Dashboard Empty](docs/screenshots/app/Screenshot_2026-04-08_180407.png) |
+| ![Login](docs/screenshots/app/01-login-page.png) | ![Dashboard Empty](docs/screenshots/app/02-dashboard-empty.png) |
 
 | Dashboard with Task Created | Task Marked as Completed |
 |---|---|
-| ![Dashboard Task](docs/screenshots/app/Screenshot_2026-04-08_180509.png) | ![Task Completed](docs/screenshots/app/Screenshot_2026-04-08_180522.png) |
+| ![Dashboard Task](docs/screenshots/app/03-dashboard-with-task.png) | ![Task Completed](docs/screenshots/app/04-task-completed.png) |
 
 ---
 
@@ -219,15 +219,15 @@ graph TD
 
 | Application Home — Healthy & Synced | Resource Tree View |
 |---|---|
-| ![ArgoCD Home](docs/screenshots/argocd/Screenshot_2026-04-08_180706.png) | ![ArgoCD Tree](docs/screenshots/argocd/Screenshot__815_.png) |
+| ![ArgoCD Home](docs/screenshots/argocd/05-argocd-home.png) | ![ArgoCD Tree](docs/screenshots/argocd/01-argocd-tree.png) |
 
 | Network View — ELB → Ingress → Services → Pods | Resource List — 13 Resources Synced |
 |---|---|
-| ![ArgoCD Network](docs/screenshots/argocd/Screenshot__817_.png) | ![ArgoCD List](docs/screenshots/argocd/Screenshot__818_.png) |
+| ![ArgoCD Network](docs/screenshots/argocd/03-argocd-network.png) | ![ArgoCD List](docs/screenshots/argocd/04-argocd-list.png) |
 
 | EKS Worker Nodes | Pods Grouped by Node |
 |---|---|
-| ![ArgoCD Nodes](docs/screenshots/argocd/Screenshot_2026-04-08_180742.png) | ![ArgoCD Pods](docs/screenshots/argocd/Screenshot__816_.png) |
+| ![ArgoCD Nodes](docs/screenshots/argocd/06-argocd-nodes.png) | ![ArgoCD Pods](docs/screenshots/argocd/02-argocd-pods.png) |
 
 ---
 
@@ -243,15 +243,15 @@ graph TD
 
 | All Available Dashboards | Custom GitOps Task Manager Dashboard |
 |---|---|
-| ![Grafana Dashboards](docs/screenshots/grafana/Screenshot__820_.png) | ![Custom Dashboard](docs/screenshots/grafana/Screenshot_2026-04-08_181522.png) |
+| ![Grafana Dashboards](docs/screenshots/grafana/01-grafana-dashboards.png) | ![Custom Dashboard](docs/screenshots/grafana/03-grafana-custom-dashboard.png) |
 
 | Kubernetes API Server — 100% Availability | Multi-Cluster CPU & Memory Utilization |
 |---|---|
-| ![K8s API Server](docs/screenshots/grafana/Screenshot_2026-04-08_184058.png) | ![K8s Cluster](docs/screenshots/grafana/Screenshot_2026-04-08_184118.png) |
+| ![K8s API Server](docs/screenshots/grafana/04-grafana-k8s-api-server.png) | ![K8s Cluster](docs/screenshots/grafana/05-grafana-k8s-cluster.png) |
 
 | Pod Network Bandwidth | Backend Pod Memory Usage |
 |---|---|
-| ![K8s Network](docs/screenshots/grafana/Screenshot_2026-04-08_184138.png) | ![Custom Memory](docs/screenshots/grafana/Screenshot_2026-04-08_184317.png) |
+| ![K8s Network](docs/screenshots/grafana/06-grafana-k8s-network.png) | ![Custom Memory](docs/screenshots/grafana/07-grafana-custom-memory.png) |
 
 ---
 
